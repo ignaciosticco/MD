@@ -5,7 +5,9 @@
 
 float rin = 1.8;  //  r de corte interno
 float rout = 2.0; //  r de corte interno (V=0 si r>r0ut)
-float sigma = 1;
+float sigma = 1.0;
+
+
 
 /*
  Devuelve el potencial que siente cada molecula, producto de la interaccion de 
@@ -15,7 +17,7 @@ float sigma = 1;
 void potencial(float *vector_x,float *vector_y,float *vector_z, float *vector_potencial,int n){
 	float deltax,deltay,deltaz,r,s;
 	for (int i = 0; i < n; ++i){
-		for (int j = 0; j < n; ++i){
+		for (int j = 0; j < n; ++j){
 			deltax = vector_x[i] - vector_x[j];
 			deltay = vector_y[i] - vector_y[j];
 			deltaz = vector_z[i] - vector_z[j];

@@ -20,7 +20,7 @@ int posiciones_iniciales(int n, float densidad,float *vector_x,float *vector_y,f
 		}
 	}
 	for(int i=0;i<n;i++){
-		//printf("%f\t%f\t%f\n",vector_x[i],vector_y[i],vector_z[i]);
+		printf("%f\t%f\t%f\n",vector_x[i],vector_y[i],vector_z[i]);
 	}
 	return 0;
 }
@@ -55,9 +55,9 @@ int velocidades_iniciales(int n,float *vector_x,float *vector_y,float *vector_z)
 		vector_z[i]=vector_z[i]-vz_medio;
 	}	
 
-	for(int i=0;i<n;i++){
-		printf("%f\t%f\t%f\n",vector_x[i],vector_y[i],vector_z[i]);
-	}
+	//for(int i=0;i<n;i++){
+	//	printf("%f\t%f\t%f\n",vector_x[i],vector_y[i],vector_z[i]);
+	//}
 	return 0;
 }
 
