@@ -38,7 +38,7 @@ int main(){
 	tabla_fuerzas(nf,fuerzas); 
 	
 	//Condiciones iniciales (usamos un lattice de tipo simple cubic)
-	posiciones_iniciales(n,densidad,pos_x,pos_y,pos_z);
+	double lado = posiciones_iniciales(n,densidad,pos_x,pos_y,pos_z);
 	velocidades_iniciales(n,vel_x,vel_y,vel_z);
 
 	//Calculo las fuerzas en t=0
@@ -49,7 +49,7 @@ int main(){
 	cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
 
 	for (int p = 0; p < np; p++) {   		
-		algoritmo_verlet(n,d_corte,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,f_x_t,f_y_t,f_z_t,fuerzas,nf);
+		algoritmo_verlet(n,d_corte,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,f_x_t,f_y_t,f_z_t,fuerzas,nf,lado);
 		potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
 		cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
 	}

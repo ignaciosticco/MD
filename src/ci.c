@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-int posiciones_iniciales(int n, float densidad,double *vector_x,double *vector_y,double *vector_z){
+double posiciones_iniciales(int n, float densidad,double *vector_x,double *vector_y,double *vector_z){
 	float cociente = (float)n/densidad;
 	double lado = pow(cociente,1/3.);
 	int partxlado = pow(n,1/3.);
@@ -20,7 +20,7 @@ int posiciones_iniciales(int n, float densidad,double *vector_x,double *vector_y
 		}
 	}
 
-return 0;
+return lado;
 }
 
 int velocidades_iniciales(int n,double *vector_x,double *vector_y,double *vector_z){
