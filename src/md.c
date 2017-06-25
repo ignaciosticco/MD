@@ -52,8 +52,9 @@ int main(){
 		algoritmo_verlet(n,d_corte,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,f_x_t,f_y_t,f_z_t,fuerzas,nf,lado);
 		potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
 		cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
+        //printf("%f\n", vector_cinetico[0]);
 	}
-
+    escribir(vector_potencial, vector_potencial, vector_cinetico, n); //El primer parametro no sé para que sirve
 	free(pos_x);
 	free(pos_y);
 	free(pos_z);
@@ -75,7 +76,9 @@ void escribir(double *f, double *m, double *e, int n)
 {
 	int i;
 	FILE *fp;
-	fp=fopen("r0.txt","a");
-	for (i=0;i<n;i++) fprintf(fp,"%.6f\n",f[i]);
+	fp=fopen("../corridas/energia.txt","w");
+	for (i = 0; i < n; i++){
+        fprintf(fp,"%d\t%.6f\t%.6f\n", i, m[i], e[i]);
+    }
 	fclose(fp);
 }

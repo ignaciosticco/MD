@@ -26,8 +26,7 @@ int potencial(int n, double d_corte, double *pos_x, double *pos_y, double *pos_z
 			}
 		}
 	}
-
-return 0;
+    return 0;
 }
 
 int cinetica(int n, double *vel_x, double *vel_y, double *vel_z, double *vector_cinetico){
@@ -37,7 +36,5 @@ int cinetica(int n, double *vel_x, double *vel_y, double *vel_z, double *vector_
 		k = vel_x[i]*vel_x[i]+vel_y[i]*vel_y[i]+vel_z[i]*vel_z[i];
 		vector_cinetico[i]=pow(k,1/2.);
 	}
-
-
-return 0;
+    return 0;
 }
