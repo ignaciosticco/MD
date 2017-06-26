@@ -6,14 +6,14 @@
 #include <stdlib.h>
 #include <math.h>
 
-void escribir(double *f, double *m, double *e, int n);
+void escribir(double f, double m, double e);
 
 int main(){
 	int n = 27; //cantidad de particulas
 	int nf = 4001; //cantidad de bins del potencial
 	float densidad = 0.8442; //dada por el problema
-	double d_corte = 0.5*pow((float)n/densidad,1/3.); //distancia de corte (potencial)
-	int np = 5000;
+	double d_corte = 0.5*pow((float)n/densidad,1/3.)-0.1; //distancia de corte (potencial)
+	int np = 4000;
 
 	double   *pos_x = malloc(n * sizeof(double));
 	double   *pos_y = malloc(n * sizeof(double));
@@ -42,7 +42,7 @@ int main(){
 	velocidades_iniciales(n,vel_x,vel_y,vel_z);
 
 	//Calculo las fuerzas en t=0
-	fuerzas_iniciales(n,d_corte,pos_x,pos_y,pos_z,f_x_t,f_y_t,f_z_t,fuerzas,nf);
+	fuerzas_iniciales(n,f_x_t,f_y_t,f_z_t);
 
 	//calculo la energia potencial y cinetica en t=0
 	potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
@@ -52,9 +52,10 @@ int main(){
 		algoritmo_verlet(n,d_corte,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,f_x_t,f_y_t,f_z_t,fuerzas,nf,lado);
 		potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
 		cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
-        //printf("%f\n", vector_cinetico[0]);
+		escribir(pos_x[0],vel_x[0],f_x_t[0]);
 	}
-    escribir(vector_potencial, vector_potencial, vector_cinetico, n); //El primer parametro no sé para que sirve
+    	//escribir(vector_potencial, vector_potencial, vector_cinetico, n); //El primer parametro no sé para que sirve
+	
 	free(pos_x);
 	free(pos_y);
 	free(pos_z);
@@ -72,13 +73,10 @@ int main(){
 	return 0;
 }
 
-void escribir(double *f, double *m, double *e, int n)
+void escribir(double f, double m, double e)
 {
-	int i;
 	FILE *fp;
-	fp=fopen("../corridas/energia.txt","w");
-	for (i = 0; i < n; i++){
-        fprintf(fp,"%d\t%.6f\t%.6f\n", i, m[i], e[i]);
-    }
+	fp=fopen("../corridas/prueba_general.txt","a");
+	fprintf(fp,"%.6f\t%.6f\t%.6f\n", f, m, e);
 	fclose(fp);
 }
