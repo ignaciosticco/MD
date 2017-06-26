@@ -6,14 +6,15 @@
 #include <stdlib.h>
 #include <math.h>
 
-void escribir(double *f, double *m, double *e, int n);
+void escribir(double vector1[],double vector2[],double vector3[],int niter,char *str);
 
 int main(){
-	int n = 27; //cantidad de particulas
+	int n = 512; //cantidad de particulas
 	int nf = 4001; //cantidad de bins del potencial
 	float densidad = 0.8442; //dada por el problema
-	double d_corte = 0.5*pow((float)n/densidad,1/3.); //distancia de corte (potencial)
-	int np = 5000;
+	double d_corte = 0.5*pow((float)n/densidad,1/3.)-0.1; //distancia de corte (potencial)
+	int np = 4000;
+	float T = 0.728;
 
 	double   *pos_x = malloc(n * sizeof(double));
 	double   *pos_y = malloc(n * sizeof(double));
@@ -39,21 +40,25 @@ int main(){
 	
 	//Condiciones iniciales (usamos un lattice de tipo simple cubic)
 	double lado = posiciones_iniciales(n,densidad,pos_x,pos_y,pos_z);
-	velocidades_iniciales(n,vel_x,vel_y,vel_z);
+	velocidades_iniciales(T,n,vel_x,vel_y,vel_z);
+	char output[30];
+	escribir(vel_x,vel_y,vel_z,n,output);
 
 	//Calculo las fuerzas en t=0
-	fuerzas_iniciales(n,d_corte,pos_x,pos_y,pos_z,f_x_t,f_y_t,f_z_t,fuerzas,nf);
+	fuerzas_iniciales(n,f_x_t,f_y_t,f_z_t);
 
 	//calculo la energia potencial y cinetica en t=0
 	potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
 	cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
-
+	/*
 	for (int p = 0; p < np; p++) {   		
 		algoritmo_verlet(n,d_corte,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,f_x_t,f_y_t,f_z_t,fuerzas,nf,lado);
 		potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
 		cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
+		//escribir(pos_x[0],pos_y[0],f_x_t[0]);
 	}
-
+    	//escribir(vector_potencial, vector_potencial, vector_cinetico, n); //El primer parametro no sé para que sirve
+	*/
 	free(pos_x);
 	free(pos_y);
 	free(pos_z);
@@ -71,11 +76,13 @@ int main(){
 	return 0;
 }
 
-void escribir(double *f, double *m, double *e, int n)
-{
-	int i;
-	FILE *fp;
-	fp=fopen("r0.txt","a");
-	for (i=0;i<n;i++) fprintf(fp,"%.6f\n",f[i]);
-	fclose(fp);
+void escribir(double vector1[],double vector2[],double vector3[],int niter,char *str){
+  int i;
+  FILE *fp;
+  fp = fopen(str,"w");
+  for(i=0;i<niter;i++){
+    fprintf(fp, "%.6f \t %.6f \t %.6f \n",vector1[i],vector2[i],vector3[i]);
+  }  
+
+  fclose(fp);
 }

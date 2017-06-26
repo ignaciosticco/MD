@@ -1,5 +1,4 @@
 #include "ci.h"
-//#include "time.h"
 #include "stdio.h"
 #include <stdlib.h>
 #include <math.h>
@@ -23,16 +22,18 @@ double posiciones_iniciales(int n, float densidad,double *vector_x,double *vecto
 return lado;
 }
 
-int velocidades_iniciales(int n,double *vector_x,double *vector_y,double *vector_z){
+int velocidades_iniciales(float T,int n,double *vector_x,double *vector_y,double *vector_z){
 
-		double vx_medio=0.0;
-		double vy_medio=0.0;
-		double vz_medio=0.0;
+	double vx_medio=0.0;
+	double vy_medio=0.0;
+	double vz_medio=0.0;
+	float sigma = sqrt(T);
+	float media = 0.0;
 
 	for(int i=0; i<n;i++){
-		double ex = (double)rand()/RAND_MAX-0.5;
-		double ey = (double)rand()/RAND_MAX-0.5;
-		double ez = (double)rand()/RAND_MAX-0.5;
+		double ex = rand_gausiano(media,sigma);
+		double ey = rand_gausiano(media,sigma);
+		double ez = rand_gausiano(media,sigma);
 
 		vector_x[i]=ex;
 		vector_y[i]=ey;
@@ -56,38 +57,29 @@ int velocidades_iniciales(int n,double *vector_x,double *vector_y,double *vector
 return 0;
 }
 
-int fuerzas_iniciales(int n, double d_corte, double *pos_x, double *pos_y, double *pos_z, double *f_x_t, double *f_y_t, double *f_z_t, double *fuerzas, int nf) {
+int fuerzas_iniciales(int n, double *f_x_t, double *f_y_t, double *f_z_t) {
 	
-	double distancia_cuadrado, distancia;
-
 	for (int ii=0; ii < n; ii++){
 		f_x_t[ii] = 0.0;
 		f_y_t[ii] = 0.0;
 		f_z_t[ii] = 0.0;
 	}
 
-	//calculo las fuerzas sobre cada una de las partículas
-	for (int i=0; i < (n-1); i++){
-		for (int j=i+1; j < n; j++){
-			
-			distancia_cuadrado = pow(pos_x[i]-pos_x[j],2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.);
-			distancia = pow(distancia_cuadrado,1/2.);	
-			
-			if (distancia <= d_corte){
-
-				int a = (int) (distancia*nf/4.0) - 1.0;	
-						
-				f_x_t[i] += fuerzas[a]*(pos_x[j]-pos_x[i])/distancia;
-				f_x_t[j] -= fuerzas[a]*(pos_x[j]-pos_x[i])/distancia;
-				f_y_t[i] += fuerzas[a]*(pos_y[j]-pos_y[i])/distancia;
-				f_y_t[j] -= fuerzas[a]*(pos_y[j]-pos_y[i])/distancia;
-				f_z_t[i] += fuerzas[a]*(pos_z[j]-pos_z[i])/distancia;
-				f_z_t[j] -= fuerzas[a]*(pos_z[j]-pos_z[i])/distancia;
-				
-				//if (i==0) printf("distancia=%g\ta=%i\tf_x_t=%g\tfuerzas[a]=%g\tj=%i\n",distancia,a,f_x_t[i],fuerzas[a],j+1);
-			}
-		}
-	}
-
 return 0;
 }
+
+
+//////////////////// Codigo que genera un random gausiano  //////////////////// 
+double drand(){   
+/* uniform distribution, (0..1] */
+  return (rand()+1.0)/(RAND_MAX+1.0);
+}
+double random_normal(){
+/* normal distribution, centered on 0, std dev 1 */
+  return sqrt(-2*log(drand())) * cos(2*M_PI*drand());
+}
+double rand_gausiano(float media,float sigma){
+  return media + sigma*random_normal();
+}
+// Fuente: https://stackoverflow.com/questions/7034930/how-to-generate-gaussian-pseudo-random-numbers-in-c-for-a-given-mean-and-varianc
+/////////// //////////////////////////  ///////////

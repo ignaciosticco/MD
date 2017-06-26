@@ -6,7 +6,7 @@
 int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double *pos_z, double *vel_x, double *vel_y, double *vel_z, double *f_x_t, double *f_y_t, double *f_z_t, double *fuerzas, int nf,double lado) {
 
 	double h = 0.001;
-	double distancia_cuadrado, distancia, actualizacion, d_corte_cuadrado;
+	double distancia_cuadrado, distancia, actualizacion, d_corte_cuadrado, dx, dy, dz;
 
 	double   *f_x_t_h = malloc(n * sizeof(double));
 	double   *f_y_t_h = malloc(n * sizeof(double));
@@ -14,12 +14,12 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 
 	//actualizo las posiciones
 	for (int i=0; i < n; i++){
-		pos_x[i] = pos_x[i] + vel_x[i]*h+(0.5)*f_x_t[i]*h*h;
-		pos_x[i] = pos_x[i] - lado* (int)(pos_x[i]/lado);  // Efecto mario bros
-		pos_y[i] = pos_y[i] + vel_y[i]*h+(0.5)*f_y_t[i]*h*h;
-		pos_y[i] = pos_y[i] -  lado* (int)(pos_y[i]/lado); // Efecto mario bros
-		pos_z[i] = pos_z[i] + vel_z[i]*h+(0.5)*f_z_t[i]*h*h;
-		pos_z[i] = pos_z[i] -  lado* (int)(pos_z[i]/lado);  // Efecto mario bros
+		pos_x[i] = pos_x[i] + vel_x[i]*h+0.5*f_x_t[i]*h*h;
+		pos_x[i] = pos_x[i] - lado*((int)((pos_x[i]+lado)/lado)-1);  // Efecto mario bros
+		pos_y[i] = pos_y[i] + vel_y[i]*h+0.5*f_y_t[i]*h*h;
+		pos_y[i] = pos_y[i] - lado*((int)((pos_y[i]+lado)/lado)-1);  // Efecto mario bros
+		pos_z[i] = pos_z[i] + vel_z[i]*h+0.5*f_z_t[i]*h*h;
+		pos_z[i] = pos_z[i] - lado*((int)((pos_z[i]+lado)/lado)-1);  // Efecto mario bros
 	}
 	
 	for (int i=0; i < n; i++){
@@ -32,40 +32,50 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 	d_corte_cuadrado = d_corte*d_corte;
 	for (int i = 0; i < (n-1); i++){
 		for (int j=i+1; j < n; j++){
+
+			distancia = 1.0;
+            		dx = pos_x[i]-pos_x[j];
+            		dy = pos_y[i]-pos_y[j];
+            		dz = pos_z[i]-pos_z[j];
+            		distancia_cuadrado = dx*dx+dy*dy+dz*dz;
+            
+            		//Decide si la partícula i interactúa con la j de forma real o virtual o no interactúa directamente
+			if (distancia_cuadrado <= d_corte_cuadrado) distancia = pow(distancia_cuadrado,1/2.);
+				
+			else {
+                	//i está muy lejos de j real, calcula entonces en qué región debería ubicarse la partícula virtual.
+		        //Divide por cuadrantes la caja real y se fija en cada una de las direcciones a que cuadrante va a ir a parar la virtual
 			
+				double dx_abs = fabs(dx);
+				double dy_abs = fabs(dy);
+				double dz_abs = fabs(dz);   
+
+				if(dx_abs >= lado/2.0) dx = dx - dx*lado/dx_abs; 
+	                	if(dy_abs >= lado/2.0) dy = dy - dy*lado/dy_abs;
+				if(dz_abs >= lado/2.0) dz = dz - dz*lado/dz_abs;
+	
+				distancia_cuadrado = dx*dx+dy*dy+dz*dz;
+		                if (distancia_cuadrado <= d_corte_cuadrado) distancia = pow(distancia_cuadrado,1/2.);
+				else {
+					dx=0.0;
+					dy=0.0;
+					dz=0.0;
+				}                
+			}
 			
-			distancia_cuadrado = 0;
-			if (distancia_cuadrado = pow(pos_x[i]-pos_x[j],2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.) <= d_corte_cuadrado){
+			int a = (int) (distancia*nf/4.0) - 1.0;		
+			actualizacion = fuerzas[a]*dx/distancia;
+			f_x_t_h[i] += actualizacion;
+			f_x_t_h[j] -= actualizacion;
+			actualizacion = fuerzas[a]*dy/distancia;
+			f_y_t_h[i] += actualizacion;
+			f_y_t_h[j] -= actualizacion;
+			actualizacion = fuerzas[a]*dz/distancia;
+			f_z_t_h[i] += actualizacion;
+			f_z_t_h[j] -= actualizacion;
 
-			}else if (distancia_cuadrado = pow(pos_x[i]-pos_x[j]+lado,2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.) <= d_corte_cuadrado){
-
-			}else if (distancia_cuadrado = pow(pos_x[i]-pos_x[j]+lado,2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.) <= d_corte_cuadrado){
-
-			}else if (distancia_cuadrado = pow(pos_x[i]-pos_x[j]+lado,2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.) <= d_corte_cuadrado){
-
-			}else if (distancia_cuadrado = pow(pos_x[i]-pos_x[j]+lado,2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.) <= d_corte_cuadrado){
-
-			}else if (distancia_cuadrado = pow(pos_x[i]-pos_x[j]+lado,2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.) <= d_corte_cuadrado){
-
-			}else if (distancia_cuadrado = pow(pos_x[i]-pos_x[j]+lado,2.)+pow(pos_y[i]-pos_y[j],2.)+pow(pos_z[i]-pos_z[j],2.) <= d_corte_cuadrado){
-
-			}
-			if(distancia_cuadrado > 0){
-				distancia = pow(distancia_cuadrado,0.5);	
-				int a = (int) (distancia*nf/4.0) - 1.0;		
-				actualizacion = fuerzas[a]*(pos_x[j]-pos_x[i])/distancia;
-				f_x_t_h[i] += actualizacion;
-				f_x_t_h[j] -= actualizacion;
-				actualizacion = fuerzas[a]*(pos_y[j]-pos_y[i])/distancia;
-				f_y_t_h[i] += actualizacion;
-				f_y_t_h[j] -= actualizacion;
-				actualizacion = fuerzas[a]*(pos_z[j]-pos_z[i])/distancia;
-				f_z_t_h[i] += actualizacion;
-				f_z_t_h[j] -= actualizacion;
-			}
 		}
 	}
-	
 	//actualizo las velocidades
 	for (int i = 0; i < n; i++){
 		vel_x[i] = vel_x[i] + (0.5)*(f_x_t[i]+f_x_t_h[i])*h;
