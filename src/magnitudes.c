@@ -17,7 +17,8 @@ double cinetica(int n, double *vel_x, double *vel_y, double *vel_z, double *vect
 	double energia_cinetica = 0.0;	
 	for (int i = 0; i < n; i++){
 		k = vel_x[i]*vel_x[i]+vel_y[i]*vel_y[i]+vel_z[i]*vel_z[i];
-		vector_cinetico[i]=pow(k,1/2.);
+		//printf("k: %f\n", k );
+		vector_cinetico[i]=k; // pow(k,1/2.);
 		energia_cinetica+=vector_cinetico[i];
 	}
     return energia_cinetica;

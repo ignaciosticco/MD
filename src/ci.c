@@ -4,11 +4,13 @@
 #include <math.h>
 
 double posiciones_iniciales(int n, float densidad,double *vector_x,double *vector_y,double *vector_z){
+	int partxlado;
 	float cociente = (float)n/densidad;
 	double lado = pow(cociente,1/3.);
-	int partxlado = pow(n,1/3.);
+	partxlado = pow(n,1/3.);
+	if(n % partxlado>0) partxlado = partxlado + 1;
 	double a = lado/(double)partxlado;
-
+	//printf("lado: %g\n",lado);
 	for(int k=0; k<partxlado;k++){
 		for(int j=0; j<partxlado;j++){
 			for(int i=0; i<partxlado;i++){
@@ -43,6 +45,7 @@ int velocidades_iniciales(float T,int n,double *vector_x,double *vector_y,double
 		vy_medio+=ey;
 		vz_medio+=ez;
 	}
+
 	vx_medio=vx_medio/(double)n;
 	vy_medio=vy_medio/(double)n;
 	vz_medio=vz_medio/(double)n;
@@ -52,6 +55,8 @@ int velocidades_iniciales(float T,int n,double *vector_x,double *vector_y,double
 		vector_x[i]=vector_x[i]-vx_medio;
 		vector_y[i]=vector_y[i]-vy_medio;
 		vector_z[i]=vector_z[i]-vz_medio;
+		//printf("velocidad: %f \n:",vector_x[i]*vector_x[i]+vector_y[i]*vector_y[i]+vector_z[i]*vector_z[i]);
+	
 	}	
 
 return 0;
