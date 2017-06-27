@@ -35,7 +35,7 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 	for (int i = 0; i < (n-1); i++){
 		for (int j=i+1; j < n; j++){
 
-			distancia = 4.0;  // Por default pone la maxima distancia xa q V=0
+			distancia = d_corte;  // Por default pone la maxima distancia xa q V=0
             		dx = pos_x[i]-pos_x[j];
             		dy = pos_y[i]-pos_y[j];
             		dz = pos_z[i]-pos_z[j];
@@ -66,7 +66,7 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 				}                
 			}
 			
-			int a = (int) (distancia*nf/4.0) - 1.0;	
+			int a = (int) (distancia*nf/d_corte) - 1;	
 			//if (distancia<1.0) printf("distancia: %f\n",distancia);
 			double va = potenciales[a];	// Valor del potencial para el indice a 
 			potencial(vector_potencial,va,a,i,j);
@@ -79,6 +79,7 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 			actualizacion = fuerzas[a]*dz/distancia;
 			f_z_t_h[i] += actualizacion;
 			f_z_t_h[j] -= actualizacion;
+			//if (a>4000) printf("a=%i\tdistancia=%g\n",a,distancia);
 
 		}
 	}

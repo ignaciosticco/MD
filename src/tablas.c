@@ -4,15 +4,15 @@
 #include <math.h>
 
 double rin = 2.0;  //  r de corte interno
-double rout = 4.0; //  r de corte interno (V=0 si r>r0ut)
 double sigma = 1.0;
 
-int tabla_potenciales(int nf, double *potenciales){
+int tabla_potenciales(int nf, double *potenciales, double d_corte){
 
+	double rout = d_corte; //  r de corte interno (V=0 si r>r0ut)
 	double r, numerador1, numerador2, denominador, s;
 	   
 	for (int i=0; i < nf; i++){
-			r = 4.0*(i+1)/(double)nf;
+			r = rout*(i+1)/(double)nf;
 			if (r <= rin) {
 				potenciales[i] = 4.0*(pow(sigma/r,12.)-pow(sigma/r,6.));
 			}
@@ -36,12 +36,13 @@ return 0;
 }
 
 
-int tabla_fuerzas(int nf, double *fuerzas){
+int tabla_fuerzas(int nf, double *fuerzas, double d_corte){
 
+	double rout = d_corte; //  r de corte interno (V=0 si r>r0ut)
 	double r, numerador1, numerador2, denominador, s, nuevo_numerador1, nuevo_numerador2, nuevo_denominador, nuevo_s;
 
 	for (int i=0; i < nf; i++){
-			r = 4.0*(i+1)/(double)nf;
+			r = rout*(i+1)/(double)nf;
 			if (r <= rin) {
 				fuerzas[i] = 48.0*(pow(sigma/r,12.)-0.5*pow(sigma/r,6.))/r;
 			}
