@@ -2,8 +2,9 @@
 #include "stdio.h"
 #include <stdlib.h>
 #include <math.h>
+#include "magnitudes.h"
 
-int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double *pos_z, double *vel_x, double *vel_y, double *vel_z, double *f_x_t, double *f_y_t, double *f_z_t, double *fuerzas, int nf,double lado) {
+int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double *pos_z, double *vel_x, double *vel_y, double *vel_z, double *f_x_t, double *f_y_t, double *f_z_t, double *fuerzas, int nf,double lado,double *vector_potencial, double *potenciales) {
 
 	double h = 0.001;
 	double distancia_cuadrado, distancia, actualizacion, d_corte_cuadrado, dx, dy, dz;
@@ -26,6 +27,7 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 		f_x_t_h[i] = 0.0;
 		f_y_t_h[i] = 0.0;
 		f_z_t_h[i] = 0.0;
+		vector_potencial[i] = 0.0;
 	}
 
 	//calculo las nuevas fuerzas sobre cada una de las partículas (en el paso t+h)
@@ -33,7 +35,7 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 	for (int i = 0; i < (n-1); i++){
 		for (int j=i+1; j < n; j++){
 
-			distancia = 1.0;
+			distancia = 4.0;  // Por default pone la maxima distancia xa q V=0
             		dx = pos_x[i]-pos_x[j];
             		dy = pos_y[i]-pos_y[j];
             		dz = pos_z[i]-pos_z[j];
@@ -57,13 +59,16 @@ int algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, double
 				distancia_cuadrado = dx*dx+dy*dy+dz*dz;
 		                if (distancia_cuadrado <= d_corte_cuadrado) distancia = pow(distancia_cuadrado,1/2.);
 				else {
+					// Esto sirve para anular la fuerza:
 					dx=0.0;
 					dy=0.0;
 					dz=0.0;
 				}                
 			}
 			
-			int a = (int) (distancia*nf/4.0) - 1.0;		
+			int a = (int) (distancia*nf/4.0) - 1.0;	
+			double va = potenciales[a];	// Valor del potencial para el indice a 
+			potencial(vector_potencial,va,a,i,j);
 			actualizacion = fuerzas[a]*dx/distancia;
 			f_x_t_h[i] += actualizacion;
 			f_x_t_h[j] -= actualizacion;

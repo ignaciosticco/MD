@@ -19,11 +19,9 @@ int main(){
 	double   *pos_x = malloc(n * sizeof(double));
 	double   *pos_y = malloc(n * sizeof(double));
 	double   *pos_z = malloc(n * sizeof(double));
-
 	double   *vel_x = malloc(n * sizeof(double));
 	double   *vel_y = malloc(n * sizeof(double));
 	double   *vel_z = malloc(n * sizeof(double));
-
 	double   *f_x_t = malloc(n * sizeof(double));
 	double   *f_y_t = malloc(n * sizeof(double));
 	double   *f_z_t = malloc(n * sizeof(double));
@@ -33,6 +31,8 @@ int main(){
 
 	double   *vector_potencial = malloc(n * sizeof(double));
 	double   *vector_cinetico = malloc(n * sizeof(double));
+	double   *energia_potencial_total = malloc(np * sizeof(double));
+	double   *energia_cinetica = malloc(np * sizeof(double));
 
 	//Armo la tabla de potenciales y de fuerzas
 	tabla_potenciales(nf,potenciales); 
@@ -47,18 +47,14 @@ int main(){
 	//Calculo las fuerzas en t=0
 	fuerzas_iniciales(n,f_x_t,f_y_t,f_z_t);
 
-	//calculo la energia potencial y cinetica en t=0
-	potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
-	cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
-	/*
+	
 	for (int p = 0; p < np; p++) {   		
-		algoritmo_verlet(n,d_corte,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,f_x_t,f_y_t,f_z_t,fuerzas,nf,lado);
-		potencial(n,d_corte,pos_x,pos_y,pos_z,vector_potencial,potenciales,nf);
-		cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
-		//escribir(pos_x[0],pos_y[0],f_x_t[0]);
+		algoritmo_verlet(n,d_corte,pos_x,pos_y,pos_z,vel_x,vel_y,vel_z,f_x_t,f_y_t,f_z_t,fuerzas,nf,lado,vector_potencial,potenciales);
+		energia_cinetica[p] = cinetica(n,vel_x,vel_y,vel_z,vector_cinetico);
+		energia_potencial_total[p] = energia_potencial(n,vector_potencial);
 	}
     	//escribir(vector_potencial, vector_potencial, vector_cinetico, n); //El primer parametro no sé para que sirve
-	*/
+	
 	free(pos_x);
 	free(pos_y);
 	free(pos_z);
@@ -72,6 +68,8 @@ int main(){
 	free(potenciales);
 	free(vector_potencial);
 	free(vector_cinetico);
+	free(energia_potencial_total);
+	free(energia_cinetica);
 
 	return 0;
 }
