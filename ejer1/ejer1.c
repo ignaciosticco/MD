@@ -13,7 +13,7 @@ int main(){
 	int nf = 4001; //cantidad de bins del potencial
 	float densidad = 0.8442; //dada por el problema
 	double d_corte = 0.5*pow((float)n/densidad,1/3.)-0.1; //distancia de corte (potencial)
-	int np = 500;
+	int np = 10000;
 	float T = 0.728;
 
 	double   *pos_x = malloc(n * sizeof(double));
@@ -76,7 +76,7 @@ int main(){
 void escribir(double vector1[],double vector2[],int niter){
   int i;
   FILE *fp;
-  fp = fopen("energias.txt","w");
+  fp = fopen("energias1.txt","w");
   for(i=0;i<niter;i++){
     fprintf(fp, "%.6f \t %.6f \n",vector1[i],vector2[i]);
   }  
