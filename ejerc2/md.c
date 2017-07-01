@@ -11,10 +11,10 @@ void escribir(double vector1[], double vector2[], double vector3[], int nt_maxim
 
 int main(int argc,char *argv[]){
 
-	float densidad_entera;
+	int densidad_entera;
 	if (argc==2) 
      	{
-       		sscanf(argv[1],"%f",&densidad_entera); //primer argumento: densidad
+       		sscanf(argv[1],"%i",&densidad_entera); //primer argumento: densidad
      	}
 
 	int n = 125; //cantidad de particulas
