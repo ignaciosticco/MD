@@ -88,9 +88,16 @@ double algoritmo_verlet(int n, double d_corte, double *pos_x, double *pos_y, dou
 	}
 	//actualizo las velocidades
 	for (int i = 0; i < n; i++){
+		//printf("velocidad arriba %f \n:",vel_x[i]);
 		vel_x[i] = vel_x[i] + (0.5)*(f_x_t[i]+f_x_t_h[i])*h;
+		//printf("f_x_t %f \n:",f_x_t[i]);
+		//printf("f_x_t_h %f \n:",f_x_t_h[i]);
+		//printf("h %f \n:",h);
+		//printf("velocidad abajo %f \n:",vel_x[i]);
+
 		vel_y[i] = vel_y[i] + (0.5)*(f_y_t[i]+f_y_t_h[i])*h;
 		vel_z[i] = vel_z[i] + (0.5)*(f_z_t[i]+f_z_t_h[i])*h;
+		
 	}
 
 	//las nuevas fuerzas me sirven para calcular las nuevas posiciones (cuando entre de nuevo al "verlet")

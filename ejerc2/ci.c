@@ -17,7 +17,6 @@ double posiciones_iniciales(int n, float densidad,double *vector_x,double *vecto
 				vector_x[i+partxlado*j+partxlado*partxlado*k] = i*a+a/2;
 				vector_y[i+partxlado*j+partxlado*partxlado*k] = j*a+a/2;
 				vector_z[i+partxlado*j+partxlado*partxlado*k] = k*a+a/2;
-				//printf("%.5f\t%.5f\t%.5f\n",vector_x[i+partxlado*j+partxlado*partxlado*k],vector_y[i+partxlado*j+partxlado*partxlado*k],vector_z[i+partxlado*j+partxlado*partxlado*k]);
 			}
 		}
 	}
